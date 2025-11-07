@@ -29,13 +29,15 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 
 ## 🚀 Features
 
-- 🌍 **Global Timezone Dashboard** — view live clocks for cities around the world, updating in real time.
-- ⭐ **Favorites List** — pin and organize your most important time zones for quick access.
-- 🕹️ **Interactive Zone Picker** — easily add or remove time zones using a searchable dropdown.
-- 💾 **Local Storage Sync** — your favorite clocks persist between sessions automatically.
-- 🌓 **Light & Dark Mode** — designed with accessibility and contrast in mind.
-- ⚡ **Built with React + TypeScript** — modern, fast, and clean architecture.
-- 🎨 **Beautiful UI** — minimal, responsive design with subtle animations for a calm dashboard feel.
+- 🌍 **Live Multi-Zone Dashboard** — add clocks for any timezone, updating in real time.
+- ⭐ **Favorites List** — pin and organize your key timezones for quick access.
+- 🔍 **Smart Search & Abbreviation Lookup** — type `BST`, `EST`, or partial names to jump instantly.
+- 🕹️ **Interactive Zone Picker** — clean dropdown with instant filtering and add button.
+- 💾 **Persistence** — clocks and settings (12h/24h, show date) saved automatically via Local Storage.
+- 🧭 **Offset Awareness** — shows GMT offset and how far ahead/behind each zone is from you.
+- 🗓️ **Optional Date Display** — toggle on/off per preference.
+- ⚡ **React + TypeScript Core** — fast, lightweight, and strongly typed.
+- 🎨 **Tailwind UI** — minimal design built for clarity and accessibility.
 
 ---
 
@@ -43,15 +45,13 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 
 Planned features and improvements for upcoming versions:
 
-- [x] Real-time multi-zone clock display
-- [x] Favorites list with local storage persistence
-- [ ] Timezone search and quick add functionality
-- [ ] 12h / 24h time format toggle
-- [ ] Display UTC offset and local differences
-- [ ] Reorder favorite clocks via drag-and-drop
-- [ ] Optional weather or date display per zone
-- [ ] Export / share your clock layout
-- [ ] PWA support for installable desktop experience
+- [ ] Drag-and-drop to reorder favorite clocks
+- [ ] “My City” auto-detection and rename
+- [ ] Share or export your layout
+- [ ] PWA support for installable experience
+- [ ] Light / Dark theme support
+- [ ] Weather and daylight indicators
+- [ ] Optional hourly chime
 
 💡 _Have an idea or feature request? Open an issue or discussion — feedback is always welcome!_
 
