@@ -29,6 +29,7 @@ ClocksAbound is a minimal, fast React dashboard for tracking multiple time zones
 It started as a small UI exercise and evolved into a polished **MVP** focused on clarity, persistence, and smooth interaction.
 
 ### 🧭 Purpose
+
 To simplify cross-timezone collaboration — perfect for remote teams, global projects, or anyone scheduling across regions.
 
 ---
@@ -37,9 +38,9 @@ To simplify cross-timezone collaboration — perfect for remote teams, global pr
 
 A big thanks to the kind contributions of developers who have helped improve the project!
 
-Every commit, idea, and bug report makes the game better.  
+Every commit, idea, and bug report makes the game better.
 
-[![Contributors](https://contrib.rocks/image?repo=NickTheDevOpsGuy/ClocksAbound)](./CONTRIBUTORS.md)  
+[![Contributors](https://contrib.rocks/image?repo=NickTheDevOpsGuy/ClocksAbound)](./CONTRIBUTORS.md)
 
 Meet all our amazing [Contributors](./CONTRIBUTORS.md).
 
