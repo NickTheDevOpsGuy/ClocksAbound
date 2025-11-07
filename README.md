@@ -2,7 +2,7 @@
 
 _A raccoon-approved dashboard for global domination — one time zone at a time._ 🦝
 
-[![CI](https://github.com/NickTheDevOpsGuy/ClocksAbound/actions/workflows/ci-file.yml/badge.svg)](https://github.com/NickTheDevOpsGuy/ClocksAbound/actions/workflows/ci-file.yml)
+[![CI](https://github.com/NickTheDevOpsGuy/ClocksAbound/actions/workflows/ClocksAbound.yml/badge.svg)](https://github.com/NickTheDevOpsGuy/ClocksAbound/actions/workflows/ClocksAbound.yml)
 ![Last Commit](https://img.shields.io/github/last-commit/NickTheDevOpsGuy/ClocksAbound)
 ![Built with React](https://img.shields.io/badge/Built%20with-React-61dafb?logo=react&logoColor=white)
 
@@ -18,10 +18,6 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 ### Main App Demo
 
 ![App Demo GIF](./public/assets/preview.gif)
-
-### Feature Highlights
-
-![Feature Showcase](./public/assets/feature.gif)
 
 > 🎞️ _Previews are short animated GIFs recorded directly from the live app using screen capture — perfect for quick demos in READMEs._
 
