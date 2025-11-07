@@ -23,6 +23,28 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 
 ---
 
+## 🕰️ About ClocksAbound
+
+ClocksAbound is a minimal, fast React dashboard for tracking multiple time zones in real time.  
+It started as a small UI exercise and evolved into a polished **MVP** focused on clarity, persistence, and smooth interaction.
+
+### 🧭 Purpose
+To simplify cross-timezone collaboration — perfect for remote teams, global projects, or anyone scheduling across regions.
+
+---
+
+## Acknowledgements
+
+A big thanks to the kind contributions of developers who have helped improve the project!
+
+Every commit, idea, and bug report makes the game better.  
+
+[![Contributors](https://contrib.rocks/image?repo=NickTheDevOpsGuy/ClocksAbound)](./CONTRIBUTORS.md)  
+
+Meet all our amazing [Contributors](./CONTRIBUTORS.md).
+
+---
+
 ## 🚀 Features
 
 - 🌍 **Live Multi-Zone Dashboard** — add clocks for any timezone, updating in real time.
