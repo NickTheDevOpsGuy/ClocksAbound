@@ -123,14 +123,16 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 ├── .prettierrc.json
 ├── .prettierrc.yml
 ├── .stylelintrc.json
-├── App.tsx
 ├── index.html
 ├── LICENSE
-├── main.tsx
+├── package-lock.json
 ├── package.json
 ├── README.md
+├── scripts
+│   └── precheck.sh
 ├── src
 │   └── app
+│       ├── App.tsx
 │       ├── components
 │       │   ├── Clock.tsx
 │       │   └── ZonePicker.tsx
@@ -138,6 +140,7 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 │       │   └── useLocalStorage.ts
 │       ├── lib
 │       │   └── timezones.ts
+│       ├── main.tsx
 │       └── styles
 │           └── global.css
 ├── tsconfig.app.json
