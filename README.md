@@ -19,7 +19,7 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 
 ![App Demo GIF](./public/assets/preview.gif)
 
-> 🎞️ _Previews are short animated GIFs recorded directly from the live app using screen capture — perfect for quick demos in READMEs._
+> 🎞️ Captured directly from the live app
 
 ---
 
@@ -145,10 +145,17 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 ├── .prettierrc.json
 ├── .prettierrc.yml
 ├── .stylelintrc.json
+├── CONTRIBUTORS.md
 ├── index.html
 ├── LICENSE
 ├── package-lock.json
 ├── package.json
+├── public
+│   ├── .DS_Store
+│   └── assets
+│       ├── .DS_Store
+│       ├── clocksabound.svg
+│       └── preview.gif
 ├── README.md
 ├── scripts
 │   └── precheck.sh
