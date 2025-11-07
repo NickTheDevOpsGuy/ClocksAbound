@@ -1,5 +1,5 @@
 # .github/workflows/ClocksAbound.yml
-name: 🕰️  ClocksAbound — CI (Prettier · ESLint · TSC)
+name: 🕰️ ClocksAbound — CI (Prettier · ESLint · TSC)
 
 on:
   pull_request:
