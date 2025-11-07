@@ -16,23 +16,25 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 ## 🖼 Preview
 
 ### Main App Demo
+
 ![App Demo GIF](./public/assets/preview.gif)
 
 ### Feature Highlights
+
 ![Feature Showcase](./public/assets/feature.gif)
 
-> 🎞️ *Previews are short animated GIFs recorded directly from the live app using screen capture — perfect for quick demos in READMEs.*
+> 🎞️ _Previews are short animated GIFs recorded directly from the live app using screen capture — perfect for quick demos in READMEs._
 
 ---
 
 ## 🚀 Features
 
-- 🌍 **Global Timezone Dashboard** — view live clocks for cities around the world, updating in real time.  
-- ⭐ **Favorites List** — pin and organize your most important time zones for quick access.  
-- 🕹️ **Interactive Zone Picker** — easily add or remove time zones using a searchable dropdown.  
-- 💾 **Local Storage Sync** — your favorite clocks persist between sessions automatically.  
-- 🌓 **Light & Dark Mode** — designed with accessibility and contrast in mind.  
-- ⚡ **Built with React + TypeScript** — modern, fast, and clean architecture.  
+- 🌍 **Global Timezone Dashboard** — view live clocks for cities around the world, updating in real time.
+- ⭐ **Favorites List** — pin and organize your most important time zones for quick access.
+- 🕹️ **Interactive Zone Picker** — easily add or remove time zones using a searchable dropdown.
+- 💾 **Local Storage Sync** — your favorite clocks persist between sessions automatically.
+- 🌓 **Light & Dark Mode** — designed with accessibility and contrast in mind.
+- ⚡ **Built with React + TypeScript** — modern, fast, and clean architecture.
 - 🎨 **Beautiful UI** — minimal, responsive design with subtle animations for a calm dashboard feel.
 
 ---
@@ -41,17 +43,17 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 
 Planned features and improvements for upcoming versions:
 
-- [x] Real-time multi-zone clock display  
-- [x] Favorites list with local storage persistence  
-- [ ] Timezone search and quick add functionality  
-- [ ] 12h / 24h time format toggle  
-- [ ] Display UTC offset and local differences  
-- [ ] Reorder favorite clocks via drag-and-drop  
-- [ ] Optional weather or date display per zone  
-- [ ] Export / share your clock layout  
-- [ ] PWA support for installable desktop experience  
+- [x] Real-time multi-zone clock display
+- [x] Favorites list with local storage persistence
+- [ ] Timezone search and quick add functionality
+- [ ] 12h / 24h time format toggle
+- [ ] Display UTC offset and local differences
+- [ ] Reorder favorite clocks via drag-and-drop
+- [ ] Optional weather or date display per zone
+- [ ] Export / share your clock layout
+- [ ] PWA support for installable desktop experience
 
-💡 *Have an idea or feature request? Open an issue or discussion — feedback is always welcome!*
+💡 _Have an idea or feature request? Open an issue or discussion — feedback is always welcome!_
 
 ---
 
@@ -59,19 +61,19 @@ Planned features and improvements for upcoming versions:
 
 ClocksAbound is built with a modern, minimal React setup focused on performance and simplicity.
 
-| Category | Technologies |
-|-----------|---------------|
-| 🖥️ Frontend | [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) |
-| ⚡ Bundler | [Vite](https://vitejs.dev/) |
-| 💅 Styling | [Tailwind CSS](https://tailwindcss.com/) |
-| 🧩 State & Hooks | React Hooks + Local Storage |
-| 🌙 Theme | Light / Dark mode with accessible contrast |
-| 🧭 Date & Time | [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat) API |
-| 🧰 Tooling | ESLint • Prettier • pnpm / npm |
+| Category         | Technologies                                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 🖥️ Frontend      | [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)                                                     |
+| ⚡ Bundler       | [Vite](https://vitejs.dev/)                                                                                                     |
+| 💅 Styling       | [Tailwind CSS](https://tailwindcss.com/)                                                                                        |
+| 🧩 State & Hooks | React Hooks + Local Storage                                                                                                     |
+| 🌙 Theme         | Light / Dark mode with accessible contrast                                                                                      |
+| 🧭 Date & Time   | [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat) API |
+| 🧰 Tooling       | ESLint • Prettier • pnpm / npm                                                                                                  |
 
 ---
 
-🧡 *Designed to be fast, accessible, and easy to extend — a playground for both design and logic.*
+🧡 _Designed to be fast, accessible, and easy to extend — a playground for both design and logic._
 
 ---
 
@@ -94,6 +96,7 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
    ```bash
    npm run dev
    ```
+
 ---
 
 ## 📂 Project Structure
@@ -149,6 +152,7 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 ├── vite-env.d.ts
 └── vite.config.ts
 ```
+
 </details>
 
 ---
