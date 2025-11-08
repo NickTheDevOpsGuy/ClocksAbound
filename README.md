@@ -13,6 +13,21 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 
 ---
 
+## 📘 Table of Contents
+
+- [🖼 Preview](#-preview)
+- [🕰️ About ClocksAbound](#️-about-clocksabound)
+- [🚀 Features](#-features)
+- [🛣️ Roadmap](#️-roadmap)
+- [🧭 Extended Roadmap](#-extended-roadmap)
+- [🧱 Tech Stack](#-tech-stack)
+- [📦 Getting Started](#-getting-started)
+- [📂 Project Structure](#-project-structure)
+- [🤝 Contributing](#-contributing)
+- [🦝 Built by NickDoesDevOps](#-built-by-nickdoesdevops)
+
+---
+
 ## 🖼 Preview
 
 ### Main App Demo
