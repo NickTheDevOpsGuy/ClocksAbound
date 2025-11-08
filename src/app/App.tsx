@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
-import { SortableClock } from './components/SortableClock';
-import { useLocalStorage } from './hooks/useLocalStorage';
-import Clock from '@components/Clock';
+import { SortableClock } from '@components/SortableClock';
+import { useLocalStorage } from '@hooks/useLocalStorage';
+import ClockComponent from '@components/Clock'; // ⬅️ same location, different local name
 import ZonePicker from '@components/ZonePicker';
 import allTimeZones from '@/lib/timezones';
 
@@ -17,13 +17,30 @@ export default function App() {
     () => options[0]?.zone ?? 'UTC'
   );
 
-  // Persist favorites (ZoneOpt[]) in localStorage
-  const [zones, setZones] = useLocalStorage<ZoneOpt[]>('favorites', []);
+  // Persist favorites (support legacy string[] -> migrate to ZoneOpt[])
+  const [zones, setZones] = useLocalStorage<ZoneOpt[] | string[]>(
+    'favorites',
+    []
+  );
+
+  // One-time migration to objects
+  useEffect(() => {
+    if (Array.isArray(zones) && zones.some((z: any) => typeof z === 'string')) {
+      const migrated = (zones as string[]).map((z) => ({ zone: z, label: z }));
+      setZones(migrated as any);
+    }
+  }, [zones, setZones]);
+
+  const safeZones: ZoneOpt[] = Array.isArray(zones)
+    ? (zones as any[]).map((z: any) =>
+        typeof z === 'string' ? ({ zone: z, label: z } as ZoneOpt) : (z as ZoneOpt)
+      )
+    : [];
 
   // 12h / 24h (persisted)
   const [hour12, setHour12] = useState<boolean>(() => {
     const raw = localStorage.getItem('ca.hour12');
-    return raw ? raw === 'true' : false; // default 24h
+    return raw ? raw === 'true' : false;
   });
   useEffect(() => {
     localStorage.setItem('ca.hour12', String(hour12));
@@ -84,22 +101,22 @@ export default function App() {
     const key = zoneKey ?? selected;
     const picked = options.find((o) => o.zone === key);
     if (!picked) return;
-    if (zones.some((z) => z.zone === picked.zone)) {
+    if (safeZones.some((z) => z.zone === picked.zone)) {
       pushToast('⚠️ Already in favorites', 'warn');
       return;
     }
-    setZones((prev) => [...prev, picked]);
+    setZones([...safeZones, picked] as any);
     pushToast(`✅ Added ${picked.label}`, 'ok');
   }
 
   function removeZone(index: number) {
-    const removed = zones[index];
-    setZones((prev) => prev.filter((_, i) => i !== index));
+    const removed = safeZones[index];
+    setZones(safeZones.filter((_, i) => i !== index) as any);
     if (removed) pushToast(`🗑️ Removed ${removed.label}`, 'info');
   }
 
   // Exclude "my zone" from favorites display
-  const favs = zones.filter((z) => z.zone !== myZone);
+  const favs = safeZones.filter((z) => z.zone !== myZone);
 
   // Drag & drop reordering (persists via useLocalStorage)
   function handleDragEnd(e: DragEndEvent) {
@@ -112,28 +129,24 @@ export default function App() {
     if (oldIndex < 0 || newIndex < 0) return;
 
     const reordered = arrayMove(favs, oldIndex, newIndex);
-    // Merge reordered favs back with "my zone" exclusion logic
-    const others = zones.filter((z) => z.zone === myZone);
-    setZones([...others, ...reordered]);
+    const mine = safeZones.filter((z) => z.zone === myZone);
+    setZones([...mine, ...reordered] as any);
   }
 
   return (
-    <main className='min-h-dvh bg-slate-950 p-6 text-slate-100'>
-      {/* Top bar: title + global toggles (in a pill) */}
-      <header className='mb-6 flex flex-wrap items-center gap-3'>
-        <h1 className='text-2xl font-bold'>🕰️ ClocksAbound</h1>
+    <main className="min-h-dvh bg-slate-950 p-6 text-slate-100">
+      <header className="mb-6 flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-bold">🕰️ ClocksAbound</h1>
 
-        <div className='ml-auto flex items-center gap-3'>
-          {/* Toggles pill */}
-          <div className='flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2'>
-            {/* 12/24h toggle */}
+        <div className="ml-auto flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2">
             <button
               onClick={() => setHour12((h) => !h)}
-              role='switch'
+              role="switch"
               aria-checked={hour12}
-              aria-label='Toggle 12/24-hour format'
-              className='inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700'
-              title='Toggle 12/24h'
+              aria-label="Toggle 12/24-hour format"
+              className="inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700"
+              title="Toggle 12/24h"
             >
               <span
                 className={`text-xs transition-colors ${
@@ -155,13 +168,12 @@ export default function App() {
               </span>
             </button>
 
-            {/* Show date toggle */}
-            <label className='ml-1 flex items-center gap-2 text-xs text-slate-300'>
+            <label className="ml-1 flex items-center gap-2 text-xs text-slate-300">
               <input
-                type='checkbox'
+                type="checkbox"
                 checked={showDate}
                 onChange={(e) => setShowDate(e.target.checked)}
-                className='h-3 w-3 accent-slate-500'
+                className="h-3 w-3 accent-slate-500"
               />
               Show date
             </label>
@@ -170,29 +182,31 @@ export default function App() {
       </header>
 
       <section
-        aria-label='clocks'
-        className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
+        aria-label="clocks"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {/* My Timezone */}
-        <h2 className='col-span-full mb-2 flex items-center gap-2 text-xl font-bold text-slate-50'>
+        <h2 className="col-span-full mb-2 flex items-center gap-2 text-xl font-bold text-slate-50">
           🕰️ My Timezone:
-          <span className='font-medium text-slate-300'>{myZone}</span>
+          <span className="font-medium text-slate-300">{myZone}</span>
           <button
             onClick={() => navigator.clipboard.writeText(myZone)}
-            className='rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-300 hover:bg-slate-800'
-            title='Copy timezone ID'
+            className="rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-300 hover:bg-slate-800"
+            title="Copy timezone ID"
           >
             Copy
           </button>
         </h2>
 
-        <Clock zone={myZone} label='You' hour12={hour12} showDate={showDate} />
+        <ClockComponent
+          zone={myZone}
+          label="You"
+          hour12={hour12}
+          showDate={showDate}
+        />
 
-        {/* Divider */}
-        <div className='col-span-full my-1 h-px bg-slate-800/60' />
+        <div className="col-span-full my-1 h-px bg-slate-800/60" />
 
-        {/* Favorites header row: picker + remove-all live here */}
-        <div className='col-span-full mb-2 flex items-center justify-between gap-3'>
+        <div className="col-span-full mb-2 flex items-center justify-between gap-3">
           <h2
             className={`flex items-center gap-2 text-2xl font-bold tracking-tight ${
               favs.length === 0
@@ -211,28 +225,26 @@ export default function App() {
             onSelect={setSelected}
             onAdd={addZone}
             onClearAll={() => {
-              if (confirm('Remove all favorites?')) setZones([]);
+              if (confirm('Remove all favorites?')) setZones([] as any);
             }}
             hasFavorites={favs.length > 0}
           />
         </div>
 
-        {/* Empty state */}
         {favs.length === 0 && (
-          <div className='col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400'>
+          <div className="col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400">
             No favorites yet — search a timezone and press{' '}
-            <span className='text-slate-200'>+ Add zone</span>.
+            <span className="text-slate-200">+ Add zone</span>.
           </div>
         )}
 
-        {/* Favorites list (sortable) */}
         {favs.length > 0 && (
           <DndContext onDragEnd={handleDragEnd}>
             <SortableContext items={favs.map((z) => z.zone)}>
               {favs.map((z, i) => (
                 <SortableClock key={z.zone} id={z.zone}>
-                  <div className='ca-animate-in relative'>
-                    <Clock
+                  <div className="ca-animate-in relative">
+                    <ClockComponent
                       zone={z.zone}
                       label={z.label}
                       hour12={hour12}
@@ -240,7 +252,7 @@ export default function App() {
                     />
                     <button
                       onClick={() => removeZone(i)}
-                      className='absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none'
+                      className="absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none"
                       aria-label={`Remove ${z.label}`}
                       title={`Remove ${z.label}`}
                     >
@@ -254,7 +266,6 @@ export default function App() {
         )}
       </section>
 
-      {/* Toast */}
       {toast.kind && (
         <div
           className={`fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg px-3 py-2 text-sm text-white shadow-lg ${
