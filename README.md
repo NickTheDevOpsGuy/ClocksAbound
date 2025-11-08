@@ -161,6 +161,7 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 ├── .prettierrc.yml
 ├── .stylelintrc.json
 ├── CONTRIBUTORS.md
+├── eslint.config.js
 ├── index.html
 ├── LICENSE
 ├── package-lock.json
@@ -191,7 +192,6 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 ├── tsconfig.json
 ├── tsconfig.node.json
 ├── vite-env.d.ts
-└── vite.config.ts
 ```
 
 </details>
