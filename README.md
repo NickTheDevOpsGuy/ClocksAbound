@@ -106,7 +106,7 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 | Category         | Technologies                                                                                                                    |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | 🖥️ Frontend      | [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)                                                     |
-|  ⚡ Bundler       | [Vite](https://vitejs.dev/)                                                                                                     |
+| ⚡ Bundler       | [Vite](https://vitejs.dev/)                                                                                                     |
 | 💅 Styling       | [Tailwind CSS](https://tailwindcss.com/)                                                                                        |
 | 🧩 State & Hooks | React Hooks + Local Storage                                                                                                     |
 | 🌙 Theme         | Light / Dark mode with accessible contrast                                                                                      |
