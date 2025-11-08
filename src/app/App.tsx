@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { SortableClock } from './components/SortableClock';
@@ -5,7 +6,6 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import Clock from '@components/Clock';
 import ZonePicker from '@components/ZonePicker';
 import allTimeZones from '@/lib/timezones';
-import { useEffect, useState } from 'react';
 
 type ZoneOpt = { zone: string; label: string };
 
@@ -13,11 +13,12 @@ export default function App() {
   const options: ZoneOpt[] = allTimeZones.map((z) => ({ zone: z, label: z }));
 
   const [query, setQuery] = useState('');
-  const [zones, setZones] = useState<ZoneOpt[]>([]);
   const [selected, setSelected] = useState<string>(
     () => options[0]?.zone ?? 'UTC'
   );
-  const [favorites, setFavorites] = useLocalStorage<string[]>('favorites', []);
+
+  // Persist favorites (ZoneOpt[]) in localStorage
+  const [zones, setZones] = useLocalStorage<ZoneOpt[]>('favorites', []);
 
   // 12h / 24h (persisted)
   const [hour12, setHour12] = useState<boolean>(() => {
@@ -44,20 +45,6 @@ export default function App() {
     msg: string;
     kind: 'ok' | 'warn' | 'info' | null;
   }>({ msg: '', kind: null });
-
-  // inside your component (same scope as favs/setZones)
-  function handleDragEnd(e: DragEndEvent) {
-    const { active, over } = e;
-    if (!over || active.id === over.id) return;
-
-    const ids = favs.map((f) => f.zone); // ["America/New_York", ...]
-    const oldIndex = ids.indexOf(String(active.id));
-    const newIndex = ids.indexOf(String(over.id));
-    if (oldIndex < 0 || newIndex < 0) return;
-
-    const reordered = arrayMove(favs, oldIndex, newIndex); // reorders the OBJECTS
-    setZones(reordered); // <- persist to localStorage
-  }
 
   function pushToast(msg: string, kind: 'ok' | 'warn' | 'info' = 'ok') {
     setToast({ msg, kind });
@@ -111,25 +98,42 @@ export default function App() {
     if (removed) pushToast(`🗑️ Removed ${removed.label}`, 'info');
   }
 
+  // Exclude "my zone" from favorites display
   const favs = zones.filter((z) => z.zone !== myZone);
 
-  return (
-    <main className='min-h-dvh bg-slate-950 p-6 text-slate-100'>
-      {/* Top bar: title + global toggles (in a pill) */}
-      <header className='mb-6 flex flex-wrap items-center gap-3'>
-        <h1 className='text-2xl font-bold'>🕰️ ClocksAbound</h1>
+  // Drag & drop reordering (persists via useLocalStorage)
+  function handleDragEnd(e: DragEndEvent) {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
 
-        <div className='ml-auto flex items-center gap-3'>
+    const ids = favs.map((f) => f.zone);
+    const oldIndex = ids.indexOf(String(active.id));
+    const newIndex = ids.indexOf(String(over.id));
+    if (oldIndex < 0 || newIndex < 0) return;
+
+    const reordered = arrayMove(favs, oldIndex, newIndex);
+    // Merge reordered favs back with "my zone" exclusion logic
+    const others = zones.filter((z) => z.zone === myZone);
+    setZones([...others, ...reordered]);
+  }
+
+  return (
+    <main className="min-h-dvh bg-slate-950 p-6 text-slate-100">
+      {/* Top bar: title + global toggles (in a pill) */}
+      <header className="mb-6 flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-bold">🕰️ ClocksAbound</h1>
+
+        <div className="ml-auto flex items-center gap-3">
           {/* Toggles pill */}
-          <div className='flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2'>
+          <div className="flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2">
             {/* 12/24h toggle */}
             <button
               onClick={() => setHour12((h) => !h)}
-              role='switch'
+              role="switch"
               aria-checked={hour12}
-              aria-label='Toggle 12/24-hour format'
-              className='inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700'
-              title='Toggle 12/24h'
+              aria-label="Toggle 12/24-hour format"
+              className="inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700"
+              title="Toggle 12/24h"
             >
               <span
                 className={`text-xs transition-colors ${
@@ -152,12 +156,12 @@ export default function App() {
             </button>
 
             {/* Show date toggle */}
-            <label className='ml-1 flex items-center gap-2 text-xs text-slate-300'>
+            <label className="ml-1 flex items-center gap-2 text-xs text-slate-300">
               <input
-                type='checkbox'
+                type="checkbox"
                 checked={showDate}
                 onChange={(e) => setShowDate(e.target.checked)}
-                className='h-3 w-3 accent-slate-500'
+                className="h-3 w-3 accent-slate-500"
               />
               Show date
             </label>
@@ -166,29 +170,29 @@ export default function App() {
       </header>
 
       <section
-        aria-label='clocks'
-        className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
+        aria-label="clocks"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
         {/* My Timezone */}
-        <h2 className='col-span-full mb-2 flex items-center gap-2 text-xl font-bold text-slate-50'>
+        <h2 className="col-span-full mb-2 flex items-center gap-2 text-xl font-bold text-slate-50">
           🕰️ My Timezone:
-          <span className='font-medium text-slate-300'>{myZone}</span>
+          <span className="font-medium text-slate-300">{myZone}</span>
           <button
             onClick={() => navigator.clipboard.writeText(myZone)}
-            className='rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-300 hover:bg-slate-800'
-            title='Copy timezone ID'
+            className="rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-300 hover:bg-slate-800"
+            title="Copy timezone ID"
           >
             Copy
           </button>
         </h2>
 
-        <Clock zone={myZone} label='You' hour12={hour12} showDate={showDate} />
+        <Clock zone={myZone} label="You" hour12={hour12} showDate={showDate} />
 
         {/* Divider */}
-        <div className='col-span-full my-1 h-px bg-slate-800/60' />
+        <div className="col-span-full my-1 h-px bg-slate-800/60" />
 
         {/* Favorites header row: picker + remove-all live here */}
-        <div className='col-span-full mb-2 flex items-center justify-between gap-3'>
+        <div className="col-span-full mb-2 flex items-center justify-between gap-3">
           <h2
             className={`flex items-center gap-2 text-2xl font-bold tracking-tight ${
               favs.length === 0
@@ -215,41 +219,38 @@ export default function App() {
 
         {/* Empty state */}
         {favs.length === 0 && (
-          <div className='col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400'>
+          <div className="col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400">
             No favorites yet — search a timezone and press{' '}
-            <span className='text-slate-200'>+ Add zone</span>.
+            <span className="text-slate-200">+ Add zone</span>.
           </div>
         )}
 
         {/* Favorites list (sortable) */}
-        {/* Wrap only the list in DnD contexts */}
         {favs.length > 0 && (
-          <>
-            <DndContext onDragEnd={handleDragEnd}>
-              <SortableContext items={favs.map((z) => z.zone)}>
-                {favs.map((z, i) => (
-                  <SortableClock key={z.zone} id={z.zone}>
-                    <div className='ca-animate-in relative'>
-                      <Clock
-                        zone={z.zone}
-                        label={z.label}
-                        hour12={hour12}
-                        showDate={showDate}
-                      />
-                      <button
-                        onClick={() => removeZone(i)}
-                        className='absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none'
-                        aria-label={`Remove ${z.label}`}
-                        title={`Remove ${z.label}`}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </SortableClock>
-                ))}
-              </SortableContext>
-            </DndContext>
-          </>
+          <DndContext onDragEnd={handleDragEnd}>
+            <SortableContext items={favs.map((z) => z.zone)}>
+              {favs.map((z, i) => (
+                <SortableClock key={z.zone} id={z.zone}>
+                  <div className="ca-animate-in relative">
+                    <Clock
+                      zone={z.zone}
+                      label={z.label}
+                      hour12={hour12}
+                      showDate={showDate}
+                    />
+                    <button
+                      onClick={() => removeZone(i)}
+                      className="absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none"
+                      aria-label={`Remove ${z.label}`}
+                      title={`Remove ${z.label}`}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </SortableClock>
+              ))}
+            </SortableContext>
+          </DndContext>
         )}
       </section>
 
