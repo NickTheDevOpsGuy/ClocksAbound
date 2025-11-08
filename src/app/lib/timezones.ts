@@ -29,3 +29,11 @@ export function isTimezoneId(value: unknown): value is TimezoneId {
     typeof value === 'string' && value.includes('/') && !value.endsWith('/')
   );
 }
+
+/**
+ * Provide a default export for convenience:
+ *   import timezones from "@/app/lib/timezones";
+ * or use named:
+ *   import { ZONES } from "@/app/lib/timezones";
+ */
+export default ZONES;

@@ -1,6 +1,10 @@
+import { DndContext, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove } from '@dnd-kit/sortable';
+import { SortableClock } from './components/SortableClock';
+import { useLocalStorage } from './hooks/useLocalStorage';
 import Clock from '@components/Clock';
 import ZonePicker from '@components/ZonePicker';
-import { allTimeZones } from '@lib/timezones';
+import allTimeZones from '@/lib/timezones';
 import { useEffect, useState } from 'react';
 
 type ZoneOpt = { zone: string; label: string };
@@ -13,6 +17,7 @@ export default function App() {
   const [selected, setSelected] = useState<string>(
     () => options[0]?.zone ?? 'UTC'
   );
+  const [favorites, setFavorites] = useLocalStorage<string[]>('favorites', []);
 
   // 12h / 24h (persisted)
   const [hour12, setHour12] = useState<boolean>(() => {
@@ -39,6 +44,20 @@ export default function App() {
     msg: string;
     kind: 'ok' | 'warn' | 'info' | null;
   }>({ msg: '', kind: null });
+
+  // inside your component (same scope as favs/setZones)
+  function handleDragEnd(e: DragEndEvent) {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+
+    const ids = favs.map((f) => f.zone); // ["America/New_York", ...]
+    const oldIndex = ids.indexOf(String(active.id));
+    const newIndex = ids.indexOf(String(over.id));
+    if (oldIndex < 0 || newIndex < 0) return;
+
+    const reordered = arrayMove(favs, oldIndex, newIndex); // reorders the OBJECTS
+    setZones(reordered); // <- persist to localStorage
+  }
 
   function pushToast(msg: string, kind: 'ok' | 'warn' | 'info' = 'ok') {
     setToast({ msg, kind });
@@ -202,25 +221,36 @@ export default function App() {
           </div>
         )}
 
-        {/* Favorites list */}
-        {favs.map((z, i) => (
-          <div key={`${z.zone}-${i}`} className='ca-animate-in relative'>
-            <Clock
-              zone={z.zone}
-              label={z.label}
-              hour12={hour12}
-              showDate={showDate}
-            />
-            <button
-              onClick={() => removeZone(i)}
-              className='absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none'
-              aria-label={`Remove ${z.label}`}
-              title={`Remove ${z.label}`}
-            >
-              ✕
-            </button>
-          </div>
-        ))}
+        {/* Favorites list (sortable) */}
+        {/* Wrap only the list in DnD contexts */}
+        {favs.length > 0 && (
+          <>
+            <DndContext onDragEnd={handleDragEnd}>
+              <SortableContext items={favs.map((z) => z.zone)}>
+                {favs.map((z, i) => (
+                  <SortableClock key={z.zone} id={z.zone}>
+                    <div className='ca-animate-in relative'>
+                      <Clock
+                        zone={z.zone}
+                        label={z.label}
+                        hour12={hour12}
+                        showDate={showDate}
+                      />
+                      <button
+                        onClick={() => removeZone(i)}
+                        className='absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none'
+                        aria-label={`Remove ${z.label}`}
+                        title={`Remove ${z.label}`}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </SortableClock>
+                ))}
+              </SortableContext>
+            </DndContext>
+          </>
+        )}
       </section>
 
       {/* Toast */}

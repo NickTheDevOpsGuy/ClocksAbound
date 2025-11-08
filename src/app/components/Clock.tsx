@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 
 export default function Clock({
   zone,
