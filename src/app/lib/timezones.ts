@@ -7,15 +7,15 @@
 export type TimezoneId = string;
 
 type IntlSupportedValues = {
-  supportedValuesOf?: (key: "timeZone") => string[];
+  supportedValuesOf?: (key: 'timeZone') => string[];
 };
 
 // Narrow `Intl` without using `any`
-const intlMaybe = (Intl as unknown) as IntlSupportedValues;
+const intlMaybe = Intl as unknown as IntlSupportedValues;
 
 const supportedTimeZones: ReadonlyArray<TimezoneId> =
-  typeof intlMaybe.supportedValuesOf === "function"
-    ? (intlMaybe.supportedValuesOf("timeZone") as ReadonlyArray<TimezoneId>)
+  typeof intlMaybe.supportedValuesOf === 'function'
+    ? (intlMaybe.supportedValuesOf('timeZone') as ReadonlyArray<TimezoneId>)
     : ([] as ReadonlyArray<TimezoneId>); // fallback to empty; consumers can provide their own list
 
 export const ZONES: ReadonlyArray<TimezoneId> = supportedTimeZones;
@@ -25,5 +25,7 @@ export const ZONES: ReadonlyArray<TimezoneId> = supportedTimeZones;
  * Very light check — keeps types narrow without depending on `any`.
  */
 export function isTimezoneId(value: unknown): value is TimezoneId {
-  return typeof value === "string" && value.includes("/") && !value.endsWith("/");
+  return (
+    typeof value === 'string' && value.includes('/') && !value.endsWith('/')
+  );
 }
