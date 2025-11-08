@@ -33,7 +33,9 @@ export default function App() {
 
   const safeZones: ZoneOpt[] = Array.isArray(zones)
     ? (zones as any[]).map((z: any) =>
-        typeof z === 'string' ? ({ zone: z, label: z } as ZoneOpt) : (z as ZoneOpt)
+        typeof z === 'string'
+          ? ({ zone: z, label: z } as ZoneOpt)
+          : (z as ZoneOpt)
       )
     : [];
 
@@ -134,19 +136,19 @@ export default function App() {
   }
 
   return (
-    <main className="min-h-dvh bg-slate-950 p-6 text-slate-100">
-      <header className="mb-6 flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-bold">🕰️ ClocksAbound</h1>
+    <main className='min-h-dvh bg-slate-950 p-6 text-slate-100'>
+      <header className='mb-6 flex flex-wrap items-center gap-3'>
+        <h1 className='text-2xl font-bold'>🕰️ ClocksAbound</h1>
 
-        <div className="ml-auto flex items-center gap-3">
-          <div className="flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2">
+        <div className='ml-auto flex items-center gap-3'>
+          <div className='flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2'>
             <button
               onClick={() => setHour12((h) => !h)}
-              role="switch"
+              role='switch'
               aria-checked={hour12}
-              aria-label="Toggle 12/24-hour format"
-              className="inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700"
-              title="Toggle 12/24h"
+              aria-label='Toggle 12/24-hour format'
+              className='inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700'
+              title='Toggle 12/24h'
             >
               <span
                 className={`text-xs transition-colors ${
@@ -168,12 +170,12 @@ export default function App() {
               </span>
             </button>
 
-            <label className="ml-1 flex items-center gap-2 text-xs text-slate-300">
+            <label className='ml-1 flex items-center gap-2 text-xs text-slate-300'>
               <input
-                type="checkbox"
+                type='checkbox'
                 checked={showDate}
                 onChange={(e) => setShowDate(e.target.checked)}
-                className="h-3 w-3 accent-slate-500"
+                className='h-3 w-3 accent-slate-500'
               />
               Show date
             </label>
@@ -182,16 +184,16 @@ export default function App() {
       </header>
 
       <section
-        aria-label="clocks"
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        aria-label='clocks'
+        className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
       >
-        <h2 className="col-span-full mb-2 flex items-center gap-2 text-xl font-bold text-slate-50">
+        <h2 className='col-span-full mb-2 flex items-center gap-2 text-xl font-bold text-slate-50'>
           🕰️ My Timezone:
-          <span className="font-medium text-slate-300">{myZone}</span>
+          <span className='font-medium text-slate-300'>{myZone}</span>
           <button
             onClick={() => navigator.clipboard.writeText(myZone)}
-            className="rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-300 hover:bg-slate-800"
-            title="Copy timezone ID"
+            className='rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-300 hover:bg-slate-800'
+            title='Copy timezone ID'
           >
             Copy
           </button>
@@ -199,14 +201,14 @@ export default function App() {
 
         <ClockComponent
           zone={myZone}
-          label="You"
+          label='You'
           hour12={hour12}
           showDate={showDate}
         />
 
-        <div className="col-span-full my-1 h-px bg-slate-800/60" />
+        <div className='col-span-full my-1 h-px bg-slate-800/60' />
 
-        <div className="col-span-full mb-2 flex items-center justify-between gap-3">
+        <div className='col-span-full mb-2 flex items-center justify-between gap-3'>
           <h2
             className={`flex items-center gap-2 text-2xl font-bold tracking-tight ${
               favs.length === 0
@@ -232,9 +234,9 @@ export default function App() {
         </div>
 
         {favs.length === 0 && (
-          <div className="col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400">
+          <div className='col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400'>
             No favorites yet — search a timezone and press{' '}
-            <span className="text-slate-200">+ Add zone</span>.
+            <span className='text-slate-200'>+ Add zone</span>.
           </div>
         )}
 
@@ -243,7 +245,7 @@ export default function App() {
             <SortableContext items={favs.map((z) => z.zone)}>
               {favs.map((z, i) => (
                 <SortableClock key={z.zone} id={z.zone}>
-                  <div className="ca-animate-in relative">
+                  <div className='ca-animate-in relative'>
                     <ClockComponent
                       zone={z.zone}
                       label={z.label}
@@ -252,7 +254,7 @@ export default function App() {
                     />
                     <button
                       onClick={() => removeZone(i)}
-                      className="absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none"
+                      className='absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none'
                       aria-label={`Remove ${z.label}`}
                       title={`Remove ${z.label}`}
                     >

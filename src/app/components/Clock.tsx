@@ -72,8 +72,8 @@ export default function Clock({
   const dayBadge = dayDelta === 1 ? '+1 day' : dayDelta === -1 ? '−1 day' : '';
 
   return (
-    <div className="relative rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
-      <div className="pr-16 text-sm opacity-70">
+    <div className='relative rounded-2xl border border-slate-800 bg-slate-900/60 p-4'>
+      <div className='pr-16 text-sm opacity-70'>
         {label ?? zone} {abbreviation && `(${abbreviation})`}
       </div>
 
@@ -83,10 +83,10 @@ export default function Clock({
         }`}
       >
         {time}
-        {showDate && <div className="mt-1 text-xs opacity-70">{dateStr}</div>}
+        {showDate && <div className='mt-1 text-xs opacity-70'>{dateStr}</div>}
       </div>
 
-      <div className="mt-1 text-xs opacity-70">
+      <div className='mt-1 text-xs opacity-70'>
         {gmt} • {rel} {dayBadge && `• ${dayBadge}`}
       </div>
     </div>
