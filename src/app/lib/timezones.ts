@@ -7,15 +7,15 @@
 export type TimezoneId = string;
 
 type IntlSupportedValues = {
-  supportedValuesOf?: (key: 'timeZone') => string[];
+  supportedValuesOf?: (key: "timeZone") => string[];
 };
 
 // Narrow `Intl` without using `any`
 const intlMaybe = Intl as unknown as IntlSupportedValues;
 
 const supportedTimeZones: ReadonlyArray<TimezoneId> =
-  typeof intlMaybe.supportedValuesOf === 'function'
-    ? (intlMaybe.supportedValuesOf('timeZone') as ReadonlyArray<TimezoneId>)
+  typeof intlMaybe.supportedValuesOf === "function"
+    ? (intlMaybe.supportedValuesOf("timeZone") as ReadonlyArray<TimezoneId>)
     : ([] as ReadonlyArray<TimezoneId>); // fallback to empty; consumers can provide their own list
 
 export const ZONES: ReadonlyArray<TimezoneId> = supportedTimeZones;
@@ -26,6 +26,14 @@ export const ZONES: ReadonlyArray<TimezoneId> = supportedTimeZones;
  */
 export function isTimezoneId(value: unknown): value is TimezoneId {
   return (
-    typeof value === 'string' && value.includes('/') && !value.endsWith('/')
+    typeof value === "string" && value.includes("/") && !value.endsWith("/")
   );
 }
+
+/**
+ * Provide a default export for convenience:
+ *   import timezones from "@/app/lib/timezones";
+ * or use named:
+ *   import { ZONES } from "@/app/lib/timezones";
+ */
+export default ZONES;

@@ -79,13 +79,21 @@ Meet all our amazing [Contributors](./CONTRIBUTORS.md).
 
 Planned features and improvements for upcoming versions:
 
-- [ ] Drag-and-drop to reorder favorite clocks
-- [ ] “My City” auto-detection and rename
-- [ ] Share or export your layout
-- [ ] PWA support for installable experience
-- [ ] Light / Dark theme support
-- [ ] Weather and daylight indicators
-- [ ] Optional hourly chime
+### ✅ Completed
+
+- [x] 🌍 Live multi-zone dashboard
+- [x] 💾 Persistence via Local Storage
+- [x] ⭐ Favorites list with search & filter
+- [x] 🧭 Offset awareness
+- [x] 🕹️ **Drag-and-drop to reorder favorite clocks**
+
+### 🚧 In Progress / Planned
+
+- [ ] 🏙️ “My City” auto-detection and rename
+- [ ] 📤 Share or export your layout
+- [ ] 🌓 Light / Dark theme support
+- [ ] 🌦️ Weather and daylight indicators
+- [ ] ⏰ Optional hourly chime
 
 💡 _Have an idea or feature request? Open an issue or discussion — feedback is always welcome!_
 
@@ -98,7 +106,7 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 | Category         | Technologies                                                                                                                    |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | 🖥️ Frontend      | [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)                                                     |
-| ⚡ Bundler       | [Vite](https://vitejs.dev/)                                                                                                     |
+|  ⚡ Bundler       | [Vite](https://vitejs.dev/)                                                                                                     |
 | 💅 Styling       | [Tailwind CSS](https://tailwindcss.com/)                                                                                        |
 | 🧩 State & Hooks | React Hooks + Local Storage                                                                                                     |
 | 🌙 Theme         | Light / Dark mode with accessible contrast                                                                                      |
@@ -140,6 +148,7 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 
 ```plaintext
 .
+├── .eslintcache
 ├── .github
 │   ├── ISSUE_TEMPLATE
 │   │   ├── bug.yml
@@ -180,18 +189,22 @@ ClocksAbound is built with a modern, minimal React setup focused on performance 
 │       ├── App.tsx
 │       ├── components
 │       │   ├── Clock.tsx
+│       │   ├── SortableClock.tsx
 │       │   └── ZonePicker.tsx
 │       ├── hooks
 │       │   └── useLocalStorage.ts
 │       ├── lib
 │       │   └── timezones.ts
 │       ├── main.tsx
-│       └── styles
-│           └── global.css
+│       ├── styles
+│       │   └── global.css
+│       └── utils
+│           └── move.ts
 ├── tsconfig.app.json
 ├── tsconfig.json
 ├── tsconfig.node.json
 ├── vite-env.d.ts
+└── vite.config.ts
 ```
 
 </details>
