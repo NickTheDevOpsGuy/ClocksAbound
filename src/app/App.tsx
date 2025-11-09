@@ -76,18 +76,21 @@ export default function App() {
   }>({ msg: '', kind: null });
 
   function renameZone(index: number) {
-  const current = safeZones[index];
-  if (!current) return;
-  const nextLabel = prompt('Rename clock label', current.customLabel ?? current.label);
-  if (nextLabel === null) return; // cancelled
-  const label = nextLabel.trim().slice(0, 40); // cap length a bit
-  setZones(
-    safeZones.map((z, i) =>
-      i === index ? { ...z, customLabel: label || undefined } : z
-    ) as any
-  );
-  pushToast(label ? `✏️ Renamed to "${label}"` : '↩️ Name reset', 'info');
-}
+    const current = safeZones[index];
+    if (!current) return;
+    const nextLabel = prompt(
+      'Rename clock label',
+      current.customLabel ?? current.label
+    );
+    if (nextLabel === null) return; // cancelled
+    const label = nextLabel.trim().slice(0, 40); // cap length a bit
+    setZones(
+      safeZones.map((z, i) =>
+        i === index ? { ...z, customLabel: label || undefined } : z
+      ) as any
+    );
+    pushToast(label ? `✏️ Renamed to "${label}"` : '↩️ Name reset', 'info');
+  }
 
   function pushToast(msg: string, kind: 'ok' | 'warn' | 'info' = 'ok') {
     setToast({ msg, kind });
@@ -159,198 +162,198 @@ export default function App() {
     setZones([...mine, ...reordered] as any);
   }
 
-return (
-  <main className='min-h-dvh bg-gradient-to-b from-slate-950 to-slate-900 p-6 text-slate-100'>
-    <header className='mb-6 flex flex-wrap items-center gap-3'>
-      <h1 className='text-2xl font-bold bg-gradient-to-r from-sky-300 to-amber-300 bg-clip-text text-transparent'>
-        🕰️ ClocksAbound
-      </h1>
+  return (
+    <main className='min-h-dvh bg-gradient-to-b from-slate-950 to-slate-900 p-6 text-slate-100'>
+      <header className='mb-6 flex flex-wrap items-center gap-3'>
+        <h1 className='text-2xl font-bold bg-gradient-to-r from-sky-300 to-amber-300 bg-clip-text text-transparent'>
+          🕰️ ClocksAbound
+        </h1>
 
-      <div className='ml-auto flex items-center gap-3'>
-        <div className='flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2'>
-          <button
-            onClick={() => setHour12((h) => !h)}
-            role='switch'
-            aria-checked={hour12}
-            aria-label='Toggle 12/24-hour format'
-            className='inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700'
-            title='Toggle 12/24h'
-          >
-            <span
-              className={`text-xs transition-colors ${
-                hour12 ? 'text-amber-400' : 'text-sky-400'
-              }`}
-            >
-              {hour12 ? '12h' : '24h'}
-            </span>
-            <span
-              className={`h-5 w-9 rounded-full transition ${
-                hour12 ? 'bg-slate-500' : 'bg-slate-700'
-              }`}
+        <div className='ml-auto flex items-center gap-3'>
+          <div className='flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2'>
+            <button
+              onClick={() => setHour12((h) => !h)}
+              role='switch'
+              aria-checked={hour12}
+              aria-label='Toggle 12/24-hour format'
+              className='inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700'
+              title='Toggle 12/24h'
             >
               <span
-                className={`block h-4 w-4 translate-x-1 rounded-full bg-white transition ${
-                  hour12 ? 'translate-x-4' : ''
+                className={`text-xs transition-colors ${
+                  hour12 ? 'text-amber-400' : 'text-sky-400'
                 }`}
+              >
+                {hour12 ? '12h' : '24h'}
+              </span>
+              <span
+                className={`h-5 w-9 rounded-full transition ${
+                  hour12 ? 'bg-slate-500' : 'bg-slate-700'
+                }`}
+              >
+                <span
+                  className={`block h-4 w-4 translate-x-1 rounded-full bg-white transition ${
+                    hour12 ? 'translate-x-4' : ''
+                  }`}
+                />
+              </span>
+            </button>
+
+            <label className='ml-1 flex items-center gap-2 text-xs text-slate-300'>
+              <input
+                type='checkbox'
+                checked={showDate}
+                onChange={(e) => setShowDate(e.target.checked)}
+                className='h-3 w-3 accent-slate-500'
               />
-            </span>
-          </button>
-
-          <label className='ml-1 flex items-center gap-2 text-xs text-slate-300'>
-            <input
-              type='checkbox'
-              checked={showDate}
-              onChange={(e) => setShowDate(e.target.checked)}
-              className='h-3 w-3 accent-slate-500'
-            />
-            Show date
-          </label>
+              Show date
+            </label>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <section
-      aria-label='clocks'
-      className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
-    >
-      {/* --- My Timezone --- */}
-      <div className='col-span-full rounded-xl bg-slate-900/60 p-4 border border-slate-800'>
-        <div className='flex items-center justify-between mb-2'>
-          <h2 className='flex items-center gap-2 text-xl font-semibold text-slate-100'>
-            🏠 My Timezone
-            <span className='text-slate-400 text-sm font-normal'>
-              ({myZone})
-            </span>
+      <section
+        aria-label='clocks'
+        className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
+      >
+        {/* --- My Timezone --- */}
+        <div className='col-span-full rounded-xl bg-slate-900/60 p-4 border border-slate-800'>
+          <div className='flex items-center justify-between mb-2'>
+            <h2 className='flex items-center gap-2 text-xl font-semibold text-slate-100'>
+              🏠 My Timezone
+              <span className='text-slate-400 text-sm font-normal'>
+                ({myZone})
+              </span>
+            </h2>
+          </div>
+
+          <ClockComponent
+            zone={myZone}
+            label='You'
+            hour12={hour12}
+            showDate={showDate}
+          />
+        </div>
+
+        {/* Divider */}
+        <div className='col-span-full my-1 h-px bg-slate-800/60' />
+
+        {/* --- Favorites --- */}
+        <div className='col-span-full mb-2 flex items-center justify-between gap-3'>
+          <h2
+            className={`flex items-center gap-2 text-2xl font-bold tracking-tight ${
+              favs.length === 0
+                ? 'text-slate-500'
+                : 'text-yellow-300 drop-shadow-[0_0_6px_rgba(255,255,200,0.25)]'
+            }`}
+          >
+            ⭐ Favorites
           </h2>
+
+          <ZonePicker
+            filtered={filtered}
+            selected={selected}
+            query={query}
+            onQuery={setQuery}
+            onSelect={setSelected}
+            onAdd={addZone}
+            onClearAll={() => {
+              if (confirm('Remove all favorites?')) setZones([] as any);
+            }}
+            hasFavorites={favs.length > 0}
+          />
         </div>
 
-        <ClockComponent
-          zone={myZone}
-          label='You'
-          hour12={hour12}
-          showDate={showDate}
-        />
-      </div>
+        {/* Empty state */}
+        {favs.length === 0 && (
+          <div className='col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400'>
+            No favorites yet — search a timezone and press{' '}
+            <span className='text-slate-200'>+ Add zone</span>.
+          </div>
+        )}
 
-      {/* Divider */}
-      <div className='col-span-full my-1 h-px bg-slate-800/60' />
+        {/* Favorite clocks */}
+        {favs.length > 0 && (
+          <DndContext onDragEnd={handleDragEnd}>
+            <SortableContext items={favs.map((z) => z.zone)}>
+              {favs.map((z, i) => (
+                <SortableClock key={z.zone} id={z.zone}>
+                  <div className='relative rounded-xl border border-slate-800 bg-slate-900/60 p-4 transition-transform duration-200 hover:scale-[1.01]'>
+                    <div className='flex items-center justify-between mb-1'>
+                      <span className='text-sm text-slate-300'>
+                        {displayLabel(z)}{' '}
+                        <span className='text-slate-500 text-xs'>
+                          ({tzAbbrev(z.zone)})
+                        </span>
+                      </span>
+                      <div className='flex gap-1'>
+                        <button
+                          onClick={() => {
+                            const next = prompt(
+                              'Rename clock label',
+                              z.customLabel ?? z.label
+                            );
+                            if (next === null) return;
+                            const label = next.trim().slice(0, 40);
+                            setZones(
+                              safeZones.map((item, idx) =>
+                                idx === i
+                                  ? { ...item, customLabel: label || undefined }
+                                  : item
+                              ) as any
+                            );
+                            pushToast(
+                              label
+                                ? `✏️ Renamed to "${label}"`
+                                : '↩️ Name reset',
+                              'info'
+                            );
+                          }}
+                          className='rounded-full px-2 py-1 text-xs text-slate-400 hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400'
+                          aria-label={`Rename ${displayLabel(z)}`}
+                          title={`Rename ${displayLabel(z)}`}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          onClick={() => removeZone(i)}
+                          className='rounded-full px-2 py-1 text-xs text-slate-400 hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400'
+                          aria-label={`Remove ${displayLabel(z)}`}
+                          title={`Remove ${displayLabel(z)}`}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
 
-      {/* --- Favorites --- */}
-      <div className='col-span-full mb-2 flex items-center justify-between gap-3'>
-        <h2
-          className={`flex items-center gap-2 text-2xl font-bold tracking-tight ${
-            favs.length === 0
-              ? 'text-slate-500'
-              : 'text-yellow-300 drop-shadow-[0_0_6px_rgba(255,255,200,0.25)]'
+                    <ClockComponent
+                      zone={z.zone}
+                      label={displayLabel(z)}
+                      hour12={hour12}
+                      showDate={showDate}
+                    />
+                  </div>
+                </SortableClock>
+              ))}
+            </SortableContext>
+          </DndContext>
+        )}
+      </section>
+
+      {/* Toast */}
+      {toast.kind && (
+        <div
+          className={`fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg px-3 py-2 text-sm text-white shadow-lg backdrop-blur ${
+            toast.kind === 'ok'
+              ? 'bg-emerald-600/90'
+              : toast.kind === 'warn'
+                ? 'bg-amber-600/90'
+                : 'bg-slate-700/90'
           }`}
         >
-          ⭐ Favorites
-        </h2>
-
-        <ZonePicker
-          filtered={filtered}
-          selected={selected}
-          query={query}
-          onQuery={setQuery}
-          onSelect={setSelected}
-          onAdd={addZone}
-          onClearAll={() => {
-            if (confirm('Remove all favorites?')) setZones([] as any);
-          }}
-          hasFavorites={favs.length > 0}
-        />
-      </div>
-
-      {/* Empty state */}
-      {favs.length === 0 && (
-        <div className='col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400'>
-          No favorites yet — search a timezone and press{' '}
-          <span className='text-slate-200'>+ Add zone</span>.
+          {toast.msg}
         </div>
       )}
-
-      {/* Favorite clocks */}
-      {favs.length > 0 && (
-        <DndContext onDragEnd={handleDragEnd}>
-          <SortableContext items={favs.map((z) => z.zone)}>
-            {favs.map((z, i) => (
-              <SortableClock key={z.zone} id={z.zone}>
-                <div className='relative rounded-xl border border-slate-800 bg-slate-900/60 p-4 transition-transform duration-200 hover:scale-[1.01]'>
-                  <div className='flex items-center justify-between mb-1'>
-                    <span className='text-sm text-slate-300'>
-                      {displayLabel(z)}{' '}
-                      <span className='text-slate-500 text-xs'>
-                        ({tzAbbrev(z.zone)})
-                      </span>
-                    </span>
-                    <div className='flex gap-1'>
-                      <button
-                        onClick={() => {
-                          const next = prompt(
-                            'Rename clock label',
-                            z.customLabel ?? z.label
-                          );
-                          if (next === null) return;
-                          const label = next.trim().slice(0, 40);
-                          setZones(
-                            safeZones.map((item, idx) =>
-                              idx === i
-                                ? { ...item, customLabel: label || undefined }
-                                : item
-                            ) as any
-                          );
-                          pushToast(
-                            label
-                              ? `✏️ Renamed to "${label}"`
-                              : '↩️ Name reset',
-                            'info'
-                          );
-                        }}
-                        className='rounded-full px-2 py-1 text-xs text-slate-400 hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400'
-                        aria-label={`Rename ${displayLabel(z)}`}
-                        title={`Rename ${displayLabel(z)}`}
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        onClick={() => removeZone(i)}
-                        className='rounded-full px-2 py-1 text-xs text-slate-400 hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400'
-                        aria-label={`Remove ${displayLabel(z)}`}
-                        title={`Remove ${displayLabel(z)}`}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-
-                  <ClockComponent
-                    zone={z.zone}
-                    label={displayLabel(z)}
-                    hour12={hour12}
-                    showDate={showDate}
-                  />
-                </div>
-              </SortableClock>
-            ))}
-          </SortableContext>
-        </DndContext>
-      )}
-    </section>
-
-    {/* Toast */}
-    {toast.kind && (
-      <div
-        className={`fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg px-3 py-2 text-sm text-white shadow-lg backdrop-blur ${
-          toast.kind === 'ok'
-            ? 'bg-emerald-600/90'
-            : toast.kind === 'warn'
-              ? 'bg-amber-600/90'
-              : 'bg-slate-700/90'
-        }`}
-      >
-        {toast.msg}
-      </div>
-    )}
-  </main>
-);
+    </main>
+  );
 }

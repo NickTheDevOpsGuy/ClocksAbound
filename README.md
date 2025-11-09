@@ -63,17 +63,17 @@ Meet all our amazing [Contributors](./CONTRIBUTORS.md).
 
 ## 🚀 Features
 
-- 🌍 **Live Multi-Zone Dashboard** — add clocks for any timezone, updating in real time.  
-- ⭐ **Favorites List** — pin, rename, and reorder your most important zones.  
-- 🔍 **Smart Search & Abbreviation Lookup** — type `BST`, `EST`, or partial names to jump instantly.  
-- 🕹️ **Drag-and-Drop Reordering** — rearrange your favorite clocks effortlessly.  
-- 💾 **Persistence** — favorites and settings (12h/24h, show date, custom labels) saved automatically via Local Storage.  
-- 🧭 **Offset Awareness** — shows GMT offset and how far ahead or behind each zone is from your local time.  
-- 🗓️ **Optional Date Display** — toggle date visibility to match your preference.  
-- ✏️ **Custom Labels** — rename any clock to something memorable (“HQ”, “Tokyo Ops”, “Yo Mamma Clock”).  
-- 🖼️ **Refined UI / UX** — gradient background, smooth hover animations, aligned icons, and a cohesive dark theme.  
-- ⚡ **React + TypeScript Core** — lightweight, fast, and strongly typed.  
-- 🎨 **Tailwind UI** — built for clarity and accessibility, no heavy UI frameworks needed.  
+- 🌍 **Live Multi-Zone Dashboard** — add clocks for any timezone, updating in real time.
+- ⭐ **Favorites List** — pin, rename, and reorder your most important zones.
+- 🔍 **Smart Search & Abbreviation Lookup** — type `BST`, `EST`, or partial names to jump instantly.
+- 🕹️ **Drag-and-Drop Reordering** — rearrange your favorite clocks effortlessly.
+- 💾 **Persistence** — favorites and settings (12h/24h, show date, custom labels) saved automatically via Local Storage.
+- 🧭 **Offset Awareness** — shows GMT offset and how far ahead or behind each zone is from your local time.
+- 🗓️ **Optional Date Display** — toggle date visibility to match your preference.
+- ✏️ **Custom Labels** — rename any clock to something memorable (“HQ”, “Tokyo Ops”, “Yo Mamma Clock”).
+- 🖼️ **Refined UI / UX** — gradient background, smooth hover animations, aligned icons, and a cohesive dark theme.
+- ⚡ **React + TypeScript Core** — lightweight, fast, and strongly typed.
+- 🎨 **Tailwind UI** — built for clarity and accessibility, no heavy UI frameworks needed.
 
 ---
 
