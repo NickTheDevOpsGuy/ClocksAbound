@@ -1,92 +1,77 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { SortableClock } from '@components/SortableClock';
 import { useLocalStorage } from '@hooks/useLocalStorage';
-import ClockComponent from '@components/Clock'; // ⬅️ same location, different local name
+import ClockComponent from '@components/Clock';
 import ZonePicker from '@components/ZonePicker';
 import allTimeZones from '@/lib/timezones';
+import { useDebouncedValue } from '@hooks/useDebouncedValue';
 
 type ZoneOpt = { zone: string; label: string };
 
+// ——— Local helper ————————————————————————————————————————————————
+function lsGet(key: string) {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(key);
+}
+
+// ——— Component ————————————————————————————————————————————————
 export default function App() {
+  // — derived: static options (used by selected initializer) —
   const options: ZoneOpt[] = allTimeZones.map((z) => ({ zone: z, label: z }));
 
+  // — state: query/selection —
   const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<string>(
-    () => options[0]?.zone ?? 'UTC'
-  );
+  const [selected, setSelected] = useState<string>(() => options[0]?.zone ?? 'UTC');
 
-  // Persist favorites (support legacy string[] -> migrate to ZoneOpt[])
-  const [zones, setZones] = useLocalStorage<ZoneOpt[] | string[]>(
-    'favorites',
-    []
-  );
+  // — derived: debounced query for filtering —
+  const q = query.toLowerCase();
+  const qDebounced = useDebouncedValue(q, 200);
 
-  // One-time migration to objects
+  // — favorites (storage + one-time migration) —
+  const [zones, setZones] = useLocalStorage<ZoneOpt[] | string[]>('favorites', []);
+  const [migrated, setMigrated] = useState(false);
+
   useEffect(() => {
-    if (Array.isArray(zones) && zones.some((z: any) => typeof z === 'string')) {
-      const migrated = (zones as string[]).map((z) => ({ zone: z, label: z }));
-      setZones(migrated as any);
+    if (!migrated && Array.isArray(zones) && zones.some((z: any) => typeof z === 'string')) {
+      const next = (zones as string[]).map((z) => ({ zone: z, label: z }));
+      setZones(next as any); // write back once
+      setMigrated(true);
+    } else if (!migrated) {
+      setMigrated(true);
     }
-  }, [zones, setZones]);
+  }, [zones, migrated, setZones]);
 
-  const safeZones: ZoneOpt[] = Array.isArray(zones)
-    ? (zones as any[]).map((z: any) =>
-        typeof z === 'string'
-          ? ({ zone: z, label: z } as ZoneOpt)
-          : (z as ZoneOpt)
-      )
-    : [];
+  // After migration, treat as ZoneOpt[]
+  const safeZones: ZoneOpt[] = (zones as ZoneOpt[]) || [];
 
-  // 12h / 24h (persisted)
-  const [hour12, setHour12] = useState<boolean>(() => {
-    const raw = localStorage.getItem('ca.hour12');
-    return raw ? raw === 'true' : false;
-  });
+  // — state: UI prefs (persisted) —
+  const [hour12, setHour12] = useState<boolean>(() => lsGet('ca.hour12') === 'true');
   useEffect(() => {
     localStorage.setItem('ca.hour12', String(hour12));
   }, [hour12]);
 
-  // Show date (persisted)
-  const [showDate, setShowDate] = useState<boolean>(() => {
-    const raw = localStorage.getItem('ca.showDate');
-    return raw ? raw === 'true' : false;
-  });
+  const [showDate, setShowDate] = useState<boolean>(() => lsGet('ca.showDate') === 'true');
   useEffect(() => {
     localStorage.setItem('ca.showDate', String(showDate));
   }, [showDate]);
 
+  // — environment —
   const myZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  // Toast
-  const [toast, setToast] = useState<{
-    msg: string;
-    kind: 'ok' | 'warn' | 'info' | null;
-  }>({ msg: '', kind: null });
+  // — ui helpers / toasts —
+  const [toast, setToast] = useState<{ msg: string; kind: 'ok' | 'warn' | 'info' | null }>({
+    msg: '',
+    kind: null,
+  });
 
   function pushToast(msg: string, kind: 'ok' | 'warn' | 'info' = 'ok') {
     setToast({ msg, kind });
     setTimeout(() => setToast({ msg: '', kind: null }), 1200);
   }
 
-  // Filter by label or abbreviation
-  const q = query.toLowerCase();
-  const summer = new Date(Date.UTC(new Date().getFullYear(), 6, 1));
-  const filtered = options.filter((o: ZoneOpt) => {
-    const labelHit = o.label.toLowerCase().includes(q);
-    const abbrNow = tzAbbrev(o.zone).toLowerCase();
-    const abbrSummer = tzAbbrev(o.zone, summer).toLowerCase();
-    const abbrHit = abbrNow.includes(q) || abbrSummer.includes(q);
-    return labelHit || abbrHit;
-  });
-
-  useEffect(() => {
-    if (!filtered.some((o) => o.zone === selected)) {
-      if (filtered[0]?.zone) setSelected(filtered[0].zone);
-    }
-  }, [q, filtered, selected]);
-
+  // — utils —
   function tzAbbrev(zone: string, date = new Date()) {
     return (
       new Intl.DateTimeFormat('en-US', {
@@ -98,7 +83,25 @@ export default function App() {
     );
   }
 
-  // Add / Remove
+  // — derived: filtered list + keep selected valid —
+  const filtered = useMemo(() => {
+    const summer = new Date(Date.UTC(new Date().getFullYear(), 6, 1));
+    return options.filter((o) => {
+      const labelHit = o.label.toLowerCase().includes(qDebounced);
+      const abbrNow = tzAbbrev(o.zone).toLowerCase();
+      const abbrSummer = tzAbbrev(o.zone, summer).toLowerCase();
+      const abbrHit = abbrNow.includes(qDebounced) || abbrSummer.includes(qDebounced);
+      return labelHit || abbrHit;
+    });
+  }, [options, qDebounced]);
+
+  useEffect(() => {
+    if (!filtered.some((o) => o.zone === selected)) {
+      if (filtered[0]?.zone) setSelected(filtered[0].zone);
+    }
+  }, [filtered, selected]);
+
+  // — handlers: add / remove / reorder —
   function addZone(zoneKey?: string) {
     const key = zoneKey ?? selected;
     const picked = options.find((o) => o.zone === key);
@@ -117,10 +120,8 @@ export default function App() {
     if (removed) pushToast(`🗑️ Removed ${removed.label}`, 'info');
   }
 
-  // Exclude "my zone" from favorites display
-  const favs = safeZones.filter((z) => z.zone !== myZone);
+  const favs = useMemo(() => safeZones.filter((z) => z.zone !== myZone), [safeZones, myZone]);
 
-  // Drag & drop reordering (persists via useLocalStorage)
   function handleDragEnd(e: DragEndEvent) {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
@@ -135,6 +136,7 @@ export default function App() {
     setZones([...mine, ...reordered] as any);
   }
 
+  // — render —
   return (
     <main className='min-h-dvh bg-slate-950 p-6 text-slate-100'>
       <header className='mb-6 flex flex-wrap items-center gap-3'>
@@ -150,23 +152,11 @@ export default function App() {
               className='inline-flex items-center gap-2 rounded-full bg-slate-800 px-3 py-2 hover:bg-slate-700'
               title='Toggle 12/24h'
             >
-              <span
-                className={`text-xs transition-colors ${
-                  hour12 ? 'text-amber-400' : 'text-sky-400'
-                }`}
-              >
+              <span className={`text-xs transition-colors ${hour12 ? 'text-amber-400' : 'text-sky-400'}`}>
                 {hour12 ? '12h' : '24h'}
               </span>
-              <span
-                className={`h-5 w-9 rounded-full transition ${
-                  hour12 ? 'bg-slate-500' : 'bg-slate-700'
-                }`}
-              >
-                <span
-                  className={`block h-4 w-4 translate-x-1 rounded-full bg-white transition ${
-                    hour12 ? 'translate-x-4' : ''
-                  }`}
-                />
+              <span className={`h-5 w-9 rounded-full transition ${hour12 ? 'bg-slate-500' : 'bg-slate-700'}`}>
+                <span className={`block h-4 w-4 translate-x-1 rounded-full bg-white transition ${hour12 ? 'translate-x-4' : ''}`} />
               </span>
             </button>
 
@@ -183,10 +173,7 @@ export default function App() {
         </div>
       </header>
 
-      <section
-        aria-label='clocks'
-        className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
-      >
+      <section aria-label='clocks' className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
         <h2 className='col-span-full mb-2 flex items-center gap-2 text-xl font-bold text-slate-50'>
           🕰️ My Timezone:
           <span className='font-medium text-slate-300'>{myZone}</span>
@@ -199,12 +186,7 @@ export default function App() {
           </button>
         </h2>
 
-        <ClockComponent
-          zone={myZone}
-          label='You'
-          hour12={hour12}
-          showDate={showDate}
-        />
+        <ClockComponent zone={myZone} label='You' hour12={hour12} showDate={showDate} />
 
         <div className='col-span-full my-1 h-px bg-slate-800/60' />
 
@@ -235,8 +217,7 @@ export default function App() {
 
         {favs.length === 0 && (
           <div className='col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400'>
-            No favorites yet — search a timezone and press{' '}
-            <span className='text-slate-200'>+ Add zone</span>.
+            No favorites yet — search a timezone and press <span className='text-slate-200'>+ Add zone</span>.
           </div>
         )}
 
@@ -246,12 +227,7 @@ export default function App() {
               {favs.map((z, i) => (
                 <SortableClock key={z.zone} id={z.zone}>
                   <div className='ca-animate-in relative'>
-                    <ClockComponent
-                      zone={z.zone}
-                      label={z.label}
-                      hour12={hour12}
-                      showDate={showDate}
-                    />
+                    <ClockComponent zone={z.zone} label={z.label} hour12={hour12} showDate={showDate} />
                     <button
                       onClick={() => removeZone(i)}
                       className='absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none'
@@ -271,11 +247,7 @@ export default function App() {
       {toast.kind && (
         <div
           className={`fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg px-3 py-2 text-sm text-white shadow-lg ${
-            toast.kind === 'ok'
-              ? 'bg-emerald-600/90'
-              : toast.kind === 'warn'
-                ? 'bg-amber-600/90'
-                : 'bg-slate-700/90'
+            toast.kind === 'ok' ? 'bg-emerald-600/90' : toast.kind === 'warn' ? 'bg-amber-600/90' : 'bg-slate-700/90'
           }`}
         >
           {toast.msg}
