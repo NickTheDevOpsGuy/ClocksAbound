@@ -8,7 +8,17 @@ import ZonePicker from '@components/ZonePicker';
 import allTimeZones from '@/lib/timezones';
 import { useDebouncedValue } from '@hooks/useDebouncedValue';
 
-type ZoneOpt = { zone: string; label: string };
+type ZoneOpt = { zone: string; label: string; customLabel?: string };
+
+// Local helpers
+function lsGet(key: string) {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(key);
+}
+
+function displayLabel(z: ZoneOpt) {
+  return z.customLabel?.trim() || z.label;
+}
 
 // ——— Local helper ————————————————————————————————————————————————
 function lsGet(key: string) {
@@ -81,6 +91,23 @@ export default function App() {
     msg: '',
     kind: null,
   });
+
+  function renameZone(index: number) {
+    const current = safeZones[index];
+    if (!current) return;
+    const nextLabel = prompt(
+      'Rename clock label',
+      current.customLabel ?? current.label
+    );
+    if (nextLabel === null) return; // cancelled
+    const label = nextLabel.trim().slice(0, 40); // cap length a bit
+    setZones(
+      safeZones.map((z, i) =>
+        i === index ? { ...z, customLabel: label || undefined } : z
+      ) as any
+    );
+    pushToast(label ? `✏️ Renamed to "${label}"` : '↩️ Name reset', 'info');
+  }
 
   function pushToast(msg: string, kind: 'ok' | 'warn' | 'info' = 'ok') {
     setToast({ msg, kind });
@@ -158,9 +185,11 @@ export default function App() {
 
   // — render —
   return (
-    <main className='min-h-dvh bg-slate-950 p-6 text-slate-100'>
+    <main className='min-h-dvh bg-gradient-to-b from-slate-950 to-slate-900 p-6 text-slate-100'>
       <header className='mb-6 flex flex-wrap items-center gap-3'>
-        <h1 className='text-2xl font-bold'>🕰️ ClocksAbound</h1>
+        <h1 className='text-2xl font-bold bg-gradient-to-r from-sky-300 to-amber-300 bg-clip-text text-transparent'>
+          🕰️ ClocksAbound
+        </h1>
 
         <div className='ml-auto flex items-center gap-3'>
           <div className='flex items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2'>
@@ -203,27 +232,29 @@ export default function App() {
         aria-label='clocks'
         className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
       >
-        <h2 className='col-span-full mb-2 flex items-center gap-2 text-xl font-bold text-slate-50'>
-          🕰️ My Timezone:
-          <span className='font-medium text-slate-300'>{myZone}</span>
-          <button
-            onClick={() => navigator.clipboard.writeText(myZone)}
-            className='rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-300 hover:bg-slate-800'
-            title='Copy timezone ID'
-          >
-            Copy
-          </button>
-        </h2>
+        {/* --- My Timezone --- */}
+        <div className='col-span-full rounded-xl bg-slate-900/60 p-4 border border-slate-800'>
+          <div className='flex items-center justify-between mb-2'>
+            <h2 className='flex items-center gap-2 text-xl font-semibold text-slate-100'>
+              🏠 My Timezone
+              <span className='text-slate-400 text-sm font-normal'>
+                ({myZone})
+              </span>
+            </h2>
+          </div>
 
-        <ClockComponent
-          zone={myZone}
-          label='You'
-          hour12={hour12}
-          showDate={showDate}
-        />
+          <ClockComponent
+            zone={myZone}
+            label='You'
+            hour12={hour12}
+            showDate={showDate}
+          />
+        </div>
 
+        {/* Divider */}
         <div className='col-span-full my-1 h-px bg-slate-800/60' />
 
+        {/* --- Favorites --- */}
         <div className='col-span-full mb-2 flex items-center justify-between gap-3'>
           <h2
             className={`flex items-center gap-2 text-2xl font-bold tracking-tight ${
@@ -249,6 +280,7 @@ export default function App() {
           />
         </div>
 
+        {/* Empty state */}
         {favs.length === 0 && (
           <div className='col-span-full rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400'>
             No favorites yet — search a timezone and press{' '}
@@ -256,26 +288,66 @@ export default function App() {
           </div>
         )}
 
+        {/* Favorite clocks */}
         {favs.length > 0 && (
           <DndContext onDragEnd={handleDragEnd}>
             <SortableContext items={favs.map((z) => z.zone)}>
               {favs.map((z, i) => (
                 <SortableClock key={z.zone} id={z.zone}>
-                  <div className='ca-animate-in relative'>
+                  <div className='relative rounded-xl border border-slate-800 bg-slate-900/60 p-4 transition-transform duration-200 hover:scale-[1.01]'>
+                    <div className='flex items-center justify-between mb-1'>
+                      <span className='text-sm text-slate-300'>
+                        {displayLabel(z)}{' '}
+                        <span className='text-slate-500 text-xs'>
+                          ({tzAbbrev(z.zone)})
+                        </span>
+                      </span>
+                      <div className='flex gap-1'>
+                        <button
+                          onClick={() => {
+                            const next = prompt(
+                              'Rename clock label',
+                              z.customLabel ?? z.label
+                            );
+                            if (next === null) return;
+                            const label = next.trim().slice(0, 40);
+                            setZones(
+                              safeZones.map((item, idx) =>
+                                idx === i
+                                  ? { ...item, customLabel: label || undefined }
+                                  : item
+                              ) as any
+                            );
+                            pushToast(
+                              label
+                                ? `✏️ Renamed to "${label}"`
+                                : '↩️ Name reset',
+                              'info'
+                            );
+                          }}
+                          className='rounded-full px-2 py-1 text-xs text-slate-400 hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400'
+                          aria-label={`Rename ${displayLabel(z)}`}
+                          title={`Rename ${displayLabel(z)}`}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          onClick={() => removeZone(i)}
+                          className='rounded-full px-2 py-1 text-xs text-slate-400 hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400'
+                          aria-label={`Remove ${displayLabel(z)}`}
+                          title={`Remove ${displayLabel(z)}`}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+
                     <ClockComponent
                       zone={z.zone}
-                      label={z.label}
+                      label={displayLabel(z)}
                       hour12={hour12}
                       showDate={showDate}
                     />
-                    <button
-                      onClick={() => removeZone(i)}
-                      className='absolute -top-2 -right-2 rounded-full bg-slate-800/80 px-2 py-1 text-xs hover:bg-slate-700 focus:ring-2 focus:ring-slate-400 focus:outline-none'
-                      aria-label={`Remove ${z.label}`}
-                      title={`Remove ${z.label}`}
-                    >
-                      ✕
-                    </button>
                   </div>
                 </SortableClock>
               ))}
@@ -284,9 +356,10 @@ export default function App() {
         )}
       </section>
 
+      {/* Toast */}
       {toast.kind && (
         <div
-          className={`fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg px-3 py-2 text-sm text-white shadow-lg ${
+          className={`fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg px-3 py-2 text-sm text-white shadow-lg backdrop-blur ${
             toast.kind === 'ok'
               ? 'bg-emerald-600/90'
               : toast.kind === 'warn'
