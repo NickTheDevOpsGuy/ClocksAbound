@@ -63,21 +63,21 @@ Meet all our amazing [Contributors](./CONTRIBUTORS.md).
 
 ## 🚀 Features
 
-- 🌍 **Live Multi-Zone Dashboard** — add clocks for any timezone, updating in real time.
-- ⭐ **Favorites List** — pin and organize your key timezones for quick access.
-- 🔍 **Smart Search & Abbreviation Lookup** — type `BST`, `EST`, or partial names to jump instantly.
-- 🕹️ **Interactive Zone Picker** — clean dropdown with instant filtering and add button.
-- 💾 **Persistence** — clocks and settings (12h/24h, show date) saved automatically via Local Storage.
-- 🧭 **Offset Awareness** — shows GMT offset and how far ahead/behind each zone is from you.
-- 🗓️ **Optional Date Display** — toggle on/off per preference.
-- ⚡ **React + TypeScript Core** — fast, lightweight, and strongly typed.
-- 🎨 **Tailwind UI** — minimal design built for clarity and accessibility.
+- 🌍 **Live Multi-Zone Dashboard** — add clocks for any timezone, updating in real time.  
+- ⭐ **Favorites List** — pin, rename, and reorder your most important zones.  
+- 🔍 **Smart Search & Abbreviation Lookup** — type `BST`, `EST`, or partial names to jump instantly.  
+- 🕹️ **Drag-and-Drop Reordering** — rearrange your favorite clocks effortlessly.  
+- 💾 **Persistence** — favorites and settings (12h/24h, show date, custom labels) saved automatically via Local Storage.  
+- 🧭 **Offset Awareness** — shows GMT offset and how far ahead or behind each zone is from your local time.  
+- 🗓️ **Optional Date Display** — toggle date visibility to match your preference.  
+- ✏️ **Custom Labels** — rename any clock to something memorable (“HQ”, “Tokyo Ops”, “Yo Mamma Clock”).  
+- 🖼️ **Refined UI / UX** — gradient background, smooth hover animations, aligned icons, and a cohesive dark theme.  
+- ⚡ **React + TypeScript Core** — lightweight, fast, and strongly typed.  
+- 🎨 **Tailwind UI** — built for clarity and accessibility, no heavy UI frameworks needed.  
 
 ---
 
 ## 🛣️ Roadmap
-
-Planned features and improvements for upcoming versions:
 
 ### ✅ Completed
 
@@ -85,15 +85,20 @@ Planned features and improvements for upcoming versions:
 - [x] 💾 Persistence via Local Storage
 - [x] ⭐ Favorites list with search & filter
 - [x] 🧭 Offset awareness
-- [x] 🕹️ **Drag-and-drop to reorder favorite clocks**
+- [x] 🕹️ Drag-and-drop to reorder favorite clocks
+- [x] ✏️ Rename clocks (custom labels)
+- [x] 🖼️ UI refresh with gradients, blur, and animation polish
+
+---
 
 ### 🚧 In Progress / Planned
 
-- [ ] 🏙️ “My City” auto-detection and rename
-- [ ] 📤 Share or export your layout
-- [ ] 🌓 Light / Dark theme support
-- [ ] 🌦️ Weather and daylight indicators
+- [ ] 🌤️ Weather + daylight indicators
+- [ ] 🧭 Relative time comparison — show how far each zone is from your local clock (e.g., “+8h ahead”)
+- [ ] 📤 Share or export layout
+- [ ] 🌓 Light / Dark theme toggle
 - [ ] ⏰ Optional hourly chime
+- [ ] 💬 Tooltips and accessibility refinements
 
 💡 _Have an idea or feature request? Open an issue or discussion — feedback is always welcome!_
 
