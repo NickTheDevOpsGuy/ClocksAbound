@@ -20,12 +20,6 @@ function displayLabel(z: ZoneOpt) {
   return z.customLabel?.trim() || z.label;
 }
 
-// ——— Local helper ————————————————————————————————————————————————
-function lsGet(key: string) {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(key);
-}
-
 // ——— Component ————————————————————————————————————————————————
 export default function App() {
   // — derived: static options (used by selected initializer) —
