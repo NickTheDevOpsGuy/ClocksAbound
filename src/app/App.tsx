@@ -1,3 +1,4 @@
+// src/app/App.tsx
 import { useEffect, useMemo, useState } from 'react';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
@@ -11,7 +12,7 @@ import { useDebouncedValue } from '@hooks/useDebouncedValue';
 type ZoneOpt = { zone: string; label: string; customLabel?: string };
 
 // Local helpers
-function lsGet(key: string) {
+function readFromLS(key: string) {
   if (typeof window === 'undefined') return null;
   return localStorage.getItem(key);
 }
@@ -61,14 +62,14 @@ export default function App() {
 
   // — state: UI prefs (persisted) —
   const [hour12, setHour12] = useState<boolean>(
-    () => lsGet('ca.hour12') === 'true'
+    () => readFromLS('ca.hour12') === 'true'
   );
   useEffect(() => {
     localStorage.setItem('ca.hour12', String(hour12));
   }, [hour12]);
 
   const [showDate, setShowDate] = useState<boolean>(
-    () => lsGet('ca.showDate') === 'true'
+    () => readFromLS('ca.showDate') === 'true'
   );
   useEffect(() => {
     localStorage.setItem('ca.showDate', String(showDate));
