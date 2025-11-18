@@ -38,6 +38,13 @@ _A raccoon-approved dashboard for global domination — one time zone at a time.
 
 ---
 
+## 🌐 Live Demo
+
+Try ClocksAboud here: **https://clocks-abound.vercel.app/**  
+Zero backend. All processing stays in your browser.
+
+---
+
 ## 🕰️ About ClocksAbound
 
 ClocksAbound is a minimal, fast React dashboard for tracking multiple time zones in real time.  
